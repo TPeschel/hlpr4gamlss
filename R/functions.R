@@ -218,21 +218,49 @@ compute.prediction <-
 #' @export
 #'
 compute.percentiles <-
-    function( cent = c( .025, .100, .500, .900, .975 ), prediction, family = NULL ) {
+	function( cent = c( .025, .100, .500, .900, .975 ), prediction, family = NULL ) {
 
-    	l <-
-            as.data.frame(
-                lapply(
-                    cent,
-                    inverse.probability,
-                    prediction,
-                    family ) )
+		l <-
+			as.data.frame(
+				lapply(
+					cent,
+					probability,
+					prediction,
+					family ) )
 
-    	names( l ) <-
-            paste0( 100 * round( cent, 4 ), "%" )
+		names( l ) <-
+			paste0( 100 * round( cent, 4 ), "%" )
 
-        l
-    }
+		l
+	}
+
+#' compute.references
+#'
+#' @name compute.references
+#' @description computes reference values for some percentiles for a gamlss prediction
+#' @param cent the centiles
+#' @param prediction a prediction
+#' @param family the family of prediction, for the case it's not an attribute
+#'
+#' @return a data frame where every centile is a column along x
+#' @export
+#'
+compute.references <-
+	function( cent = c( .025, .100, .500, .900, .975 ), prediction, family = NULL ) {
+
+		l <-
+			as.data.frame(
+				lapply(
+					cent,
+					inverse.probability,
+					prediction,
+					family ) )
+
+		names( l ) <-
+			paste0( 100 * round( cent, 4 ), "%" )
+
+		l
+	}
 
 #' compute.sds
 #'
