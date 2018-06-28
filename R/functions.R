@@ -72,8 +72,6 @@ inverse.probability <-
     				a ),
     			family )
 
-    	print( fam )
-
     	switch(
             as.character( fam ),
             BCT = { gamlss.dist::qBCT( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
@@ -224,34 +222,6 @@ compute.percentiles <-
 			as.data.frame(
 				lapply(
 					cent,
-					probability,
-					prediction,
-					family ) )
-
-		names( l ) <-
-			paste0( 100 * round( cent, 4 ), "%" )
-
-		l
-	}
-
-#' compute.references
-#'
-#' @name compute.references
-#' @description computes reference values for some percentiles for a gamlss prediction
-#' @param cent the centiles
-#' @param prediction a prediction
-#' @param family the family of prediction, for the case it's not an attribute
-#'
-#' @return a data frame where every centile is a column along x
-#' @export
-#'
-compute.references <-
-	function( cent = c( .025, .100, .500, .900, .975 ), prediction, family = NULL ) {
-
-		l <-
-			as.data.frame(
-				lapply(
-					cent,
 					inverse.probability,
 					prediction,
 					family ) )
@@ -329,7 +299,7 @@ do.the.whole.thing <-
                         compute.prediction( x.pred, d.g.mdl )
 
                 	d.g.prcntls <-
-                        compute.percentiles( cent = cent, d.g.prd )
+                        compute.percentiles( cent, d.g.prd )
 
                 	d.g.prcntls[ , x.col.name ] <-
                         x.pred
@@ -337,15 +307,11 @@ do.the.whole.thing <-
                 	d.g.sds <-
                         compute.sds( d.g.mdl )
 
-                	d.g.ref <-
-                        compute.references( cent, d.g.prd )
-
                 	list(
                         model = d.g.mdl,
                         pred  = d.g.prd,
                         cent  = d.g.prcntls,
-                        sds   = d.g.sds,
-                        ref   = d.g.ref
+                        sds   = d.g.sds
                     )
                 }
             )
