@@ -13,6 +13,9 @@ compute.sds(model, y = model$y, x = model$xvar)
 
 \item{x}{the independent variable}
 }
+\value{
+the residuals of the model
+}
 \description{
 computes sds for a gamlss model
 }

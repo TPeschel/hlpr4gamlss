@@ -14,10 +14,10 @@ calc.quant(cent, prediction, family = NULL)
 \item{family}{the family of prediction, for the case it's not an attribute}
 }
 \value{
-gives the values of a gamlls model prediction for a certain centile
+values relating to probabilities and prediction or family
 }
 \description{
-not for direct use
+wrapper: is the quantile function for the respective family or prediction
 }
 \examples{
 plot(d<-data.frame(x=1:1000,y=rBCTo(1000,1000,100,10,1)+rnorm( 1000,0,.1*1:1000)+1:1000))

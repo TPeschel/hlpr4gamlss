@@ -42,12 +42,12 @@ which.best.match <-
 #' calc.quant
 #'
 #' @name calc.quant
-#' @description not for direct use
+#' @description wrapper: is the quantile function for the respective family or prediction
 #' @param cent value. centiles that should be calculated. 0.0 < cent & cent < 1.0
 #' @param prediction a data.frame conraining distribution parameters (mu,sigma,nu,tau) for a certain gamlss model.
 #' @param family the family of prediction, for the case it's not an attribute
 #'
-#' @return gives the values of a gamlls model prediction for a certain centile
+#' @return values relating to probabilities and prediction or family
 #' @export
 #'
 #' @examples
@@ -83,20 +83,19 @@ calc.quant <-
         )
     }
 
-#' calc.prob
+#' calc.distr
 #'
-#' @name calc.prob
+#' @name calc.distr
 #' @description not for direct use
-#' @param x
-#' @param prediction
+#' @param q quantiles
+#' @param prediction a gamlss prediction
 #' @param family the family of prediction, for the case it's not an attribute
 #'
-#' @return
+#' @return z-scores for
 #' @export
 #'
-#' @examples
-calc.prob <-
-    function( x, prediction, family = NULL ) {
+calc.distr <-
+    function( q, prediction, family = NULL ) {
     	a<-
     		attr( prediction, "family" )[ 1 ]
     	fam <-
@@ -110,14 +109,14 @@ calc.prob <-
 
         switch(
             as.character( fam ),
-            BCT = { gamlss.dist::pBCT( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCTo = { gamlss.dist::pBCTo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCPE = { gamlss.dist::pBCPE( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCPEo = { gamlss.dist::pBCPEo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCCG = { gamlss.dist::pBCCG( x, prediction$mu, prediction$sigma, prediction$nu ) },
-            BCCGo = { gamlss.dist::pBCCGo( x, prediction$mu, prediction$sigma, prediction$nu ) },
-            NO = { gamlss.dist::pNO( x, prediction$mu, prediction$sigma ) },
-            PO = { gamlss.dist::pPO( x, prediction$mu ) } ) }
+            BCT = { gamlss.dist::pBCT( q, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+            BCTo = { gamlss.dist::pBCTo( q, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+            BCPE = { gamlss.dist::pBCPE( q, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+            BCPEo = { gamlss.dist::pBCPEo( q, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+            BCCG = { gamlss.dist::pBCCG( q, prediction$mu, prediction$sigma, prediction$nu ) },
+            BCCGo = { gamlss.dist::pBCCGo( q, prediction$mu, prediction$sigma, prediction$nu ) },
+            NO = { gamlss.dist::pNO( q, prediction$mu, prediction$sigma ) },
+            PO = { gamlss.dist::pPO( q, prediction$mu ) } ) }
 
 #' compute.model
 #'
@@ -130,25 +129,23 @@ calc.prob <-
 #' @return a gamlss model
 #' @export
 #'
-#' @examples
 compute.model <-
-    function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo" ) ) {
+    function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo" ), n.cyc = 30 ) {
         d <-
             data.frame( x, y )
-        gamlss::lms( y = y, x = x, data = d, families = families )
+        gamlss::lms( y = y, x = x, data = d, families = families, n.cyc = n.cyc )
     }
 
 #' compute.prediction
 #'
 #' @name compute.prediction
 #' @description computes a prediction for a gamlss model and new x values
-#' @param x
-#' @param model
+#' @param x the independent value
+#' @param model a gamlss model
 #'
-#' @return
+#' @return a gamlss prediction of the model with new x values
 #' @export
 #'
-#' @examples
 compute.prediction <-
     function( x, model ) {
         gamlss::predictAll( model, data.frame( x = x ) )
@@ -162,10 +159,9 @@ compute.prediction <-
 #' @param prediction a prediction
 #' @param family the family of prediction, for the case it's not an attribute
 #'
-#' @return
+#' @return a data frame where every centile is a column along x
 #' @export
 #'
-#' @examples
 compute.percentiles <-
     function( cent = c( .025, .100, .500, .900, .975 ), prediction, family = NULL ) {
         l <-
@@ -188,58 +184,39 @@ compute.percentiles <-
 #' @param y the dependent variable
 #' @param x the independent variable
 #'
-#' @return
+#' @return the residuals of the model
 #' @export
 #'
-#' @examples
 compute.sds <-
     function( model, y = model$y, x = model$xvar ) {
         gamlss::z.scores( model, y, x )
-    }
-
-#' compute.references
-#'
-#' @name compute.references
-#' @description computes reference values for a gamlss prediction
-#' @param cent
-#' @param prediction a gamlss prediction
-#' @param family the family of prediction, for the case it's not an attribute
-#'
-#' @return
-#' @export
-#'
-#' @examples
-compute.references <-
-    function( cent, prediction, family = NULL ) {
-        s <-
-            as.data.frame(
-                sapply(
-                    cent,
-                    calc.quant,
-                    prediction,
-                    family ) )
-        names( s ) <-
-            paste0( round( 100 * cent, 2 ), "%" )
-        s
     }
 
 #' do.the.whole.thing
 #'
 #' @name do.the.whole.thing
 #' @description does what it does
-#' @param cent
-#' @param y.col.name
-#' @param x.col.name
-#' @param group.col.name
-#' @param data
-#' @param x.pred
+#' @param cent the centiles that should be calculated
+#' @param y.col.name the dependent variable
+#' @param x.col.name the independent variable
+#' @param group.col.name group, the whole thing is done for every group seperately
+#' @param data data frame with at least a dependent an indepenent and a group variable
+#' @param x.pred x variable for prediction
+#' @param n.cyc number of iterations for lms
 #'
-#' @return
+#' @return a list with everything
 #' @export
 #'
-#' @examples
 do.the.whole.thing <-
-    function( cent, y.col.name = col.name, x.col.name = "AGE", group.col.name = "SEX", data, x.pred = NULL, fam = c( "BCPE", "BCT", "BCCG", "BCPEo", "BCTo", "BCCGo" ) ) {
+    function(
+    	cent,
+    	y.col.name = col.name,
+    	x.col.name = "AGE",
+    	group.col.name = "SEX",
+    	data,
+    	x.pred = NULL,
+    	fam = c( "BCPE", "BCT", "BCCG", "BCPEo", "BCTo", "BCCGo" ),
+    	n.cyc = 30 ) {
         grps <-
             levels( data[ , group.col.name ] )
         as.data.frame(
@@ -249,7 +226,7 @@ do.the.whole.thing <-
                     d.g <-
                         data[ data[ , group.col.name ] == g, ]
                     d.g.mdl <-
-                        compute.model( d.g[ , y.col.name ], d.g[ , x.col.name ], fam )
+                        compute.model( d.g[ , y.col.name ], d.g[ , x.col.name ], fam, n.cyc )
                     if( is.null( x.pred ) ) {
                         x.pred <-
                             d.g.mdl$xvar }

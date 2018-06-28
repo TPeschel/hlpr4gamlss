@@ -5,7 +5,7 @@
 \title{compute.model}
 \usage{
 compute.model(y, x, families = c("BCCG", "BCPE", "BCT", "BCCGo", "BCPEo",
-  "BCTo"))
+  "BCTo"), n.cyc = 30)
 }
 \arguments{
 \item{y}{y}

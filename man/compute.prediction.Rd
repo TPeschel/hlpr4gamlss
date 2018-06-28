@@ -7,7 +7,12 @@
 compute.prediction(x, model)
 }
 \arguments{
-\item{model}{}
+\item{x}{the independent value}
+
+\item{model}{a gamlss model}
+}
+\value{
+a gamlss prediction of the model with new x values
 }
 \description{
 computes a prediction for a gamlss model and new x values

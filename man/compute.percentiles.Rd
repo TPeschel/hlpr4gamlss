@@ -14,6 +14,9 @@ compute.percentiles(cent = c(0.025, 0.1, 0.5, 0.9, 0.975), prediction,
 
 \item{family}{the family of prediction, for the case it's not an attribute}
 }
+\value{
+a data frame where every centile is a column along x
+}
 \description{
 computes percentiles for a gamlss prediction
 }
