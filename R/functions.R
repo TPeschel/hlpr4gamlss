@@ -133,9 +133,7 @@ calc.prob <-
 #' @examples
 compute.model <-
     function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo" ) ) {
-        d <-
-            data.frame( x, y )
-        gamlss::lms( y = y, x = x, data = d, families = families )
+        gamlss::lms( y = y, x = x, data = data.frame( x, y ), families = families )
     }
 
 #' compute.prediction
