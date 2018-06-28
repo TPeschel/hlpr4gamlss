@@ -177,10 +177,13 @@ density <-
 compute.model <-
     function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo" ), n.cyc = 30 ) {
 
+    	d <-
+    		data.frame( x, y )
+
     	gamlss::lms(
     		y = y,
     		x = x,
-    		data = data.frame( x, y ),
+    		data = d,
     		families = families,
     		n.cyc = n.cyc )
     }
