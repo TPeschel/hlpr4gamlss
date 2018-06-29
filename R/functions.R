@@ -72,17 +72,23 @@ inverse.probability <-
     				a ),
     			family )
 
-    	switch(
-            as.character( fam ),
-            BCT = { gamlss.dist::qBCT( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCTo = { gamlss.dist::qBCTo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCPE = { gamlss.dist::qBCPE( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCPEo = { gamlss.dist::qBCPEo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCCG = { gamlss.dist::qBCCG( cent, prediction$mu, prediction$sigma, prediction$nu ) },
-            BCCGo = { gamlss.dist::qBCCGo( cent, prediction$mu, prediction$sigma, prediction$nu ) },
-            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
-            PO = { gamlss.dist::qPO( cent, prediction$mu ) }
-        )
+    	tryCatch(
+    		switch(
+            	as.character( fam ),
+	            BCT = { gamlss.dist::qBCT( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCTo = { gamlss.dist::qBCTo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCPE = { gamlss.dist::qBCPE( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCPEo = { gamlss.dist::qBCPEo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCCG = { gamlss.dist::qBCCG( cent, prediction$mu, prediction$sigma, prediction$nu ) },
+	            BCCGo = { gamlss.dist::qBCCGo( cent, prediction$mu, prediction$sigma, prediction$nu ) },
+	            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
+	            PO = { gamlss.dist::qPO( cent, prediction$mu ) } ),
+    		warning = {
+    			print( paste0( "something went wrong with ", fam ) )
+    			NULL },
+    		error = {
+    			print( paste0( "something went wrong with ", fam ) )
+    			NULL } )
     }
 
 #' probability
