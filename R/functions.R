@@ -84,11 +84,12 @@ inverse.probability <-
 	            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
 	            PO = { gamlss.dist::qPO( cent, prediction$mu ) } ),
     		warning = {
-    			print( paste0( "something went wrong with ", fam ) )
-    			NULL },
+    			print( paste0( "warning! something went wrong with ", fam ) )
+    			return( NULL ) },
     		error = {
-    			print( paste0( "something went wrong with ", fam ) )
-    			NULL } )
+    			print( paste0( "error! something went really wrong with ", fam ) )
+    			return( NULL ) },
+    		finally = { } )
     }
 
 #' probability
