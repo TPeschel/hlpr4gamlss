@@ -318,40 +318,36 @@ do.the.whole.thing <-
                         	error = function( msg ) {
                         		message( "Prediction could not be calcultated." )
                         		message( msg )
-                        		return( NA ) } )
+                        		return( NULL ) } )
 
-                	d.g.prcntls <-
-                		tryCatch(
-                			compute.percentiles( cent, d.g.prd ),
-                        	error = function( msg ) {
-                        		message( "Percentiles could not be calcultated." )
-                        		message( msg )
-                        		return( NA ) } )
+                	if( ! is.null( d.g.prd ) ) {
 
-                	d.g.prcntls[ , x.col.name ] <-
-                		tryCatch(
-                			x.pred,
-                			error = function( msg ) {
-                        		message( "Names could not be assigned." )
-                				message( msg )
-                				return( NA )
-                			} )
+                		d.g.prcntls <-
+                			tryCatch(
+                				compute.percentiles( cent, d.g.prd ),
+                        		error = function( msg ) {
+                        			message( "Percentiles could not be calcultated." )
+                        			message( msg )
+                        			return( NULL ) } ) }
 
-                	d.g.sds <-
-                        tryCatch(
-                        	compute.sds( d.g.mdl ),
-                			error = function( msg ) {
-                        		message( "SDS could not be calculated." )
-                				message( msg )
-                				return( NA )
-                			} )
+                	l <-
+                		list( model = NA, pred = NA, cent = NA, sds = NA )
 
-                	list(
-                        model = d.g.mdl,
-                        pred  = d.g.prd,
-                        cent  = d.g.prcntls,
-                        sds   = d.g.sds
-                    )
+                	if( ! is.null( d.g.prcntls ) ) {
+
+                		d.g.prcntls[ , x.col.name ] <-
+                			x.pred
+
+                		d.g.sds <-
+                        	compute.sds( d.g.mdl )
+
+                		l <-
+                			list(
+                        		model = d.g.mdl,
+                        		pred  = d.g.prd,
+                        		cent  = d.g.prcntls,
+                        		sds   = d.g.sds ) }
+                    l
                 }
             )
         )
