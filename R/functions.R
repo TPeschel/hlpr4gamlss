@@ -83,13 +83,14 @@ inverse.probability <-
 	            BCCGo = { gamlss.dist::qBCCGo( cent, prediction$mu, prediction$sigma, prediction$nu ) },
 	            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
 	            PO = { gamlss.dist::qPO( cent, prediction$mu ) } ),
-    		warning = {
-    			print( paste0( "warning! something went wrong with ", fam ) )
+    		warning = function( msg ) {
+    			message( paste0( "warning! something went wrong with ", fam ) )
+    			message( msg )
     			return( NULL ) },
-    		error = {
-    			print( paste0( "error! something went really wrong with ", fam ) )
-    			return( NULL ) },
-    		finally = { } )
+    		error = function( msg ) {
+    			message( paste0( "error! something went wrong with ", fam ) )
+    			message( msg )
+    			return( NULL ) } )
     }
 
 #' probability
@@ -206,9 +207,11 @@ compute.model <-
 compute.prediction <-
     function( x, model ) {
 
-    	gamlss::predictAll(
-        	model,
-        	data.frame( x = x ) )
+    	tryCatch(
+    		gamlss::predictAll( model, data.frame( x = x ) ),
+    		error = function( msg ) {
+    			message( msg )
+    			return( NA ) } )
     }
 
 #' compute.percentiles
@@ -226,15 +229,22 @@ compute.percentiles <-
 	function( cent = c( .025, .100, .500, .900, .975 ), prediction, family = NULL ) {
 
 		l <-
+			tryCatch(
 			as.data.frame(
 				lapply(
 					cent,
 					inverse.probability,
 					prediction,
-					family ) )
+					family ) ),
+				error = function( msg ) {
+					message( msg )
+					return( NULL )
+				} )
 
-		names( l ) <-
-			paste0( 100 * round( cent, 4 ), "%" )
+		if( ! is.null( l ) )
+
+			names( l ) <-
+				paste0( 100 * round( cent, 4 ), "%" )
 
 		l
 	}
