@@ -313,16 +313,38 @@ do.the.whole.thing <-
                 	}
 
                 	d.g.prd <-
-                        compute.prediction( x.pred, d.g.mdl )
+                        tryCatch(
+                        	compute.prediction( x.pred, d.g.mdl ),
+                        	error = function( msg ) {
+                        		message( "Prediction could not be calcultated." )
+                        		message( msg )
+                        		return( NA ) } )
 
                 	d.g.prcntls <-
-                        compute.percentiles( cent, d.g.prd )
+                		tryCatch(
+                			compute.percentiles( cent, d.g.prd ),
+                        	error = function( msg ) {
+                        		message( "Percentiles could not be calcultated." )
+                        		message( msg )
+                        		return( NA ) } )
 
                 	d.g.prcntls[ , x.col.name ] <-
-                        x.pred
+                		tryCatch(
+                			x.pred,
+                			error = function( msg ) {
+                        		message( "Names could not be assigned." )
+                				message( msg )
+                				return( NA )
+                			} )
 
                 	d.g.sds <-
-                        compute.sds( d.g.mdl )
+                        tryCatch(
+                        	compute.sds( d.g.mdl ),
+                			error = function( msg ) {
+                        		message( "SDS could not be calculated." )
+                				message( msg )
+                				return( NA )
+                			} )
 
                 	list(
                         model = d.g.mdl,
