@@ -307,6 +307,12 @@ do.the.whole.thing <-
                 	d.g.sds <-
                         compute.sds( d.g.mdl )
 
+                	d.g.sds[ , x.col.name ] <-
+                		x.pred
+
+                	names( d.g.sds ) <-
+                		names( d.g.prcntls )
+
                 	list(
                         model = d.g.mdl,
                         pred  = d.g.prd,
