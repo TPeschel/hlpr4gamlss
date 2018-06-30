@@ -339,13 +339,7 @@ do.the.whole.thing <-
                 			x.pred
 
                 		d.g.sds <-
-                        	compute.sds( d.g.mdl )
-
-                		d.g.sds[ , x.col.name ] <-
-                			x.pred
-
-                		names( d.g.sds ) <-
-                			names( d.g.prcntls )
+                			compute.sds( d.g.mdl )
 
                 		l <-
                 			list(
@@ -353,6 +347,7 @@ do.the.whole.thing <-
                         		pred  = d.g.prd,
                         		cent  = d.g.prcntls,
                         		sds   = d.g.sds ) }
+                	l
                 }
             )
         )
