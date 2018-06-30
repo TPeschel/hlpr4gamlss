@@ -72,17 +72,25 @@ inverse.probability <-
     				a ),
     			family )
 
-    	switch(
-            as.character( fam ),
-            BCT = { gamlss.dist::qBCT( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCTo = { gamlss.dist::qBCTo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCPE = { gamlss.dist::qBCPE( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCPEo = { gamlss.dist::qBCPEo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-            BCCG = { gamlss.dist::qBCCG( cent, prediction$mu, prediction$sigma, prediction$nu ) },
-            BCCGo = { gamlss.dist::qBCCGo( cent, prediction$mu, prediction$sigma, prediction$nu ) },
-            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
-            PO = { gamlss.dist::qPO( cent, prediction$mu ) }
-        )
+    	tryCatch(
+    		switch(
+            	as.character( fam ),
+	            BCT = { gamlss.dist::qBCT( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCTo = { gamlss.dist::qBCTo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCPE = { gamlss.dist::qBCPE( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCPEo = { gamlss.dist::qBCPEo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCCG = { gamlss.dist::qBCCG( cent, prediction$mu, prediction$sigma, prediction$nu ) },
+	            BCCGo = { gamlss.dist::qBCCGo( cent, prediction$mu, prediction$sigma, prediction$nu ) },
+	            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
+	            PO = { gamlss.dist::qPO( cent, prediction$mu ) } ),
+    		warning = function( msg ) {
+    			message( paste0( "warning! something went wrong with ", fam ) )
+    			message( msg )
+    			return( NULL ) },
+    		error = function( msg ) {
+    			message( paste0( "error! something went wrong with ", fam ) )
+    			message( msg )
+    			return( NULL ) } )
     }
 
 #' probability
@@ -199,9 +207,11 @@ compute.model <-
 compute.prediction <-
     function( x, model ) {
 
-    	gamlss::predictAll(
-        	model,
-        	data.frame( x = x ) )
+    	tryCatch(
+    		gamlss::predictAll( model, data.frame( x = x ) ),
+    		error = function( msg ) {
+    			message( msg )
+    			return( NA ) } )
     }
 
 #' compute.percentiles
@@ -219,15 +229,22 @@ compute.percentiles <-
 	function( cent = c( .025, .100, .500, .900, .975 ), prediction, family = NULL ) {
 
 		l <-
+			tryCatch(
 			as.data.frame(
 				lapply(
 					cent,
 					inverse.probability,
 					prediction,
-					family ) )
+					family ) ),
+				error = function( msg ) {
+					message( msg )
+					return( NULL )
+				} )
 
-		names( l ) <-
-			paste0( 100 * round( cent, 4 ), "%" )
+		if( ! is.null( l ) )
+
+			names( l ) <-
+				paste0( 100 * round( cent, 4 ), "%" )
 
 		l
 	}
@@ -296,29 +313,46 @@ do.the.whole.thing <-
                 	}
 
                 	d.g.prd <-
-                        compute.prediction( x.pred, d.g.mdl )
+                        tryCatch(
+                        	compute.prediction( x.pred, d.g.mdl ),
+                        	error = function( msg ) {
+                        		message( "Prediction could not be calcultated." )
+                        		message( msg )
+                        		return( NULL ) } )
 
-                	d.g.prcntls <-
-                        compute.percentiles( cent, d.g.prd )
+                	if( ! is.null( d.g.prd ) ) {
 
-                	d.g.prcntls[ , x.col.name ] <-
-                        x.pred
+                		d.g.prcntls <-
+                			tryCatch(
+                				compute.percentiles( cent, d.g.prd ),
+                        		error = function( msg ) {
+                        			message( "Percentiles could not be calcultated." )
+                        			message( msg )
+                        			return( NULL ) } ) }
 
-                	d.g.sds <-
-                        compute.sds( d.g.mdl )
+                	l <-
+                		list( model = NA, pred = NA, cent = NA, sds = NA )
 
-                	d.g.sds[ , x.col.name ] <-
-                		x.pred
+                	if( ! is.null( d.g.prcntls ) ) {
 
-                	names( d.g.sds ) <-
-                		names( d.g.prcntls )
+                		d.g.prcntls[ , x.col.name ] <-
+                			x.pred
 
-                	list(
-                        model = d.g.mdl,
-                        pred  = d.g.prd,
-                        cent  = d.g.prcntls,
-                        sds   = d.g.sds
-                    )
+                		d.g.sds <-
+                        	compute.sds( d.g.mdl )
+
+                		d.g.sds[ , x.col.name ] <-
+                			x.pred
+
+                		names( d.g.sds ) <-
+                			names( d.g.prcntls )
+
+                		l <-
+                			list(
+                        		model = d.g.mdl,
+                        		pred  = d.g.prd,
+                        		cent  = d.g.prcntls,
+                        		sds   = d.g.sds ) }
                 }
             )
         )
