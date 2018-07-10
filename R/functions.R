@@ -176,22 +176,33 @@ density <-
 #' @param y y
 #' @param x x
 #' @param families families try to fit
+#' @param n.cyc number of iterations
+#' @param refit continue computation
 #'
 #' @return a gamlss model
 #' @export
 #'
 compute.model <-
-    function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo" ), n.cyc = 30 ) {
+    function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo" ), n.cyc = 30, refit = F ) {
 
     	d <-
-    		data.frame( x, y )
+    		data.frame( x = x, y = y )
 
-    	gamlss::lms(
-    		y = y,
-    		x = x,
-    		data = d,
-    		families = families,
-    		n.cyc = n.cyc )
+    	d.lms <-
+    		gamlss::lms(
+    			y = y,
+    			x = x,
+    			data = d,
+    			families = families,
+    			n.cyc = n.cyc )
+
+    	if( ! d.lms$converged && refit ) {
+
+    		d.lms <-
+    			refit( d.lms )
+    	}
+
+    	d.lms
     }
 
 #' compute.prediction
@@ -304,7 +315,7 @@ do.the.whole.thing <-
                         data[ data[ , group.col.name ] == g, ]
 
                 	d.g.mdl <-
-                        compute.model( d.g[ , y.col.name ], d.g[ , x.col.name ], fam, n.cyc )
+                        compute.model( d.g[ , y.col.name ], d.g[ , x.col.name ], fam, n.cyc, refit = F )
 
                 	if( is.null( x.pred ) ) {
 

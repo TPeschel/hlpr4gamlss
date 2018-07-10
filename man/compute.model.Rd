@@ -5,7 +5,7 @@
 \title{compute.model}
 \usage{
 compute.model(y, x, families = c("BCCG", "BCPE", "BCT", "BCCGo", "BCPEo",
-  "BCTo"), n.cyc = 30)
+  "BCTo"), n.cyc = 30, refit = F)
 }
 \arguments{
 \item{y}{y}
@@ -13,6 +13,10 @@ compute.model(y, x, families = c("BCCG", "BCPE", "BCT", "BCCGo", "BCPEo",
 \item{x}{x}
 
 \item{families}{families try to fit}
+
+\item{n.cyc}{number of iterations}
+
+\item{refit}{continue computation}
 }
 \value{
 a gamlss model
