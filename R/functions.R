@@ -198,8 +198,11 @@ compute.model <-
 
     	if( ! d.lms$converged && refit ) {
 
-    		d.lms <-
+    		d.lms. <-
     			refit( d.lms )
+
+    		d.lms <-
+    			cbind( d.lms., d.lms[ , setdiff( names( d.lms ), names( d.lms. ) ) ] )
     	}
 
     	d.lms
