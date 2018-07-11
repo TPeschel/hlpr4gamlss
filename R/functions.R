@@ -201,8 +201,15 @@ compute.model <-
     		d.lms. <-
     			refit( d.lms )
 
+    		a <-
+    			setdiff( names( d.lms ), names( d.lms. ) )
+    		
+    		for( i in a ) {
+    			d.lms.[[ a[ i ] ]] <-
+    				d.lms[[ a[ i ] ]] }
+    		
     		d.lms <-
-    			cbind( d.lms., d.lms[ , setdiff( names( d.lms ), names( d.lms. ) ) ] )
+    			d.lms.
     	}
 
     	d.lms
