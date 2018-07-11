@@ -304,7 +304,7 @@ do.the.whole.thing <-
     	data,
     	x.pred = NULL,
     	fam = c( "BCPE", "BCT", "BCCG", "BCPEo", "BCTo", "BCCGo" ),
-    	n.cyc = 30 ) {
+    	n.cyc = 30, refit = F ) {
 
     	grps <-
             levels( data[ , group.col.name ] )
@@ -318,7 +318,7 @@ do.the.whole.thing <-
                         data[ data[ , group.col.name ] == g, ]
 
                 	d.g.mdl <-
-                        compute.model( d.g[ , y.col.name ], d.g[ , x.col.name ], fam, n.cyc, refit = F )
+                        compute.model( d.g[ , y.col.name ], d.g[ , x.col.name ], fam, n.cyc, refit = refit )
 
                 	if( is.null( x.pred ) ) {
 
