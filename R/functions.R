@@ -189,56 +189,35 @@ compute.model <-
     		data.frame( x = x, y = y )
 
     	d.lms <-
-    		tryCatch( {
-    			d <-
-    				gamlss::lms(
-	    				y = y,
-		    			x = x,
-		    			data = d,
-	    				families = families,
-	    				n.cyc = n.cyc )
-    			d },
-    			error=function( cond ) {
+    		gamlss::lms(
+				y = y,
+    			x = x,
+    			data = d,
+				families = families,
+				n.cyc = n.cyc )
 
-    				attr( d, "error" ) <-
-    					cond
-
-    				message( cond )
-
-    				d
-    			},
-    			warning=function( cond ) {
-
-    				attr( d, "warning" ) <-
-    					cond
-
-    				message( cond )
-
-    				d
-    			} )
-
-    	if( ! d.lms$converged ) {
-
-    		d.lms. <-
-    			refit( d.lms )
-
-    		a <-
-    			setdiff( names( d.lms ), names( d.lms. ) )
-
-    		for( i in a ) {
-    			d.lms.[[ a[ i ] ]] <-
-    				d.lms[[ a[ i ] ]] }
-
-    		d.lms <-
-    			d.lms.
-
-    		attr( d.lms, "refitted" ) <-
-    			T
-    	} else {
-
-    		attr( d.lms, "refitted" ) <-
-    			F
-    	}
+    	# if( ! d.lms$converged && refit ) {
+    	#
+    	# 	d.lms. <-
+    	# 		refit( d.lms )
+    	#
+    	# 	a <-
+    	# 		setdiff( names( d.lms ), names( d.lms. ) )
+    	#
+    	# 	for( i in a ) {
+    	# 		d.lms.[[ a[ i ] ]] <-
+    	# 			d.lms[[ a[ i ] ]] }
+    	#
+    	# 	d.lms <-
+    	# 		d.lms.
+    	#
+    	# 	attr( d.lms, "refitted" ) <-
+    	# 		T
+    	# } else {
+    	#
+    	# 	attr( d.lms, "refitted" ) <-
+    	# 		F
+    	# }
 
     	d.lms
     }
