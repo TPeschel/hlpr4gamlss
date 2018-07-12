@@ -198,16 +198,18 @@ compute.model <-
 
     	if( ! d.lms$converged && refit ) {
 
+    		print( d.lms )
+
     		d.lms. <-
     			refit( d.lms )
 
     		a <-
     			setdiff( names( d.lms ), names( d.lms. ) )
-    		
+
     		for( i in a ) {
     			d.lms.[[ a[ i ] ]] <-
     				d.lms[[ a[ i ] ]] }
-    		
+
     		d.lms <-
     			d.lms.
     	}
