@@ -200,7 +200,7 @@ compute.model <-
     			d },
     			error=function( cond ) {
 
-    				attr( d.lms, "error" ) <-
+    				attr( d, "error" ) <-
     					cond
 
     				message( cond )
@@ -209,7 +209,7 @@ compute.model <-
     			},
     			warning=function( cond ) {
 
-    				attr( d.lms, "warning" ) <-
+    				attr( d, "warning" ) <-
     					cond
 
     				message( cond )
