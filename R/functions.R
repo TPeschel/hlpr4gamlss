@@ -198,7 +198,7 @@ compute.model <-
 
     	if( ! d.lms$converged && refit ) {
 
-    		print( d.lms )
+    		print( "refitting" )
 
     		d.lms. <-
     			refit( d.lms )
