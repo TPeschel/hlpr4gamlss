@@ -198,8 +198,6 @@ compute.model <-
 
     	if( ! d.lms$converged && refit ) {
 
-    		print( "refitting" )
-
     		d.lms. <-
     			refit( d.lms )
 
@@ -212,7 +210,13 @@ compute.model <-
 
     		d.lms <-
     			d.lms.
+
+    		attr( d.lms, "refitted" ) <-
+    			T
     	}
+
+    	attr( d.lms, "refitted" ) <-
+    		F
 
     	d.lms
     }
