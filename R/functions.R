@@ -189,14 +189,35 @@ compute.model <-
     		data.frame( x = x, y = y )
 
     	d.lms <-
-    		gamlss::lms(
-    			y = y,
-    			x = x,
-    			data = d,
-    			families = families,
-    			n.cyc = n.cyc )
+    		tryCatch( {
+    			d <-
+    				gamlss::lms(
+	    				y = y,
+		    			x = x,
+		    			data = d,
+	    				families = families,
+	    				n.cyc = n.cyc )
+    			d },
+    			error=function( cond ) {
 
-    	if( ! d.lms$converged && refit ) {
+    				attr( d.lms, "error" ) <-
+    					cond
+
+    				message( cond )
+
+    				d
+    			},
+    			warning=function( cond ) {
+
+    				attr( d.lms, "warning" ) <-
+    					cond
+
+    				message( cond )
+
+    				d
+    			} )
+
+    	if( ! d.lms$converged ) {
 
     		d.lms. <-
     			refit( d.lms )
@@ -213,10 +234,11 @@ compute.model <-
 
     		attr( d.lms, "refitted" ) <-
     			T
-    	}
+    	} else {
 
-    	attr( d.lms, "refitted" ) <-
-    		F
+    		attr( d.lms, "refitted" ) <-
+    			F
+    	}
 
     	d.lms
     }
