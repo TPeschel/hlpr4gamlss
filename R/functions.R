@@ -82,7 +82,10 @@ inverse.probability <-
 	            BCCG = { gamlss.dist::qBCCG( cent, prediction$mu, prediction$sigma, prediction$nu ) },
 	            BCCGo = { gamlss.dist::qBCCGo( cent, prediction$mu, prediction$sigma, prediction$nu ) },
 	            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
-	            PO = { gamlss.dist::qPO( cent, prediction$mu ) } ),
+	            PO = { gamlss.dist::qPO( cent, prediction$mu ) },
+            	LNO = { gamlss.dist::qLNO( cent, prediction$mu, prediction$sigma, prediction$nu ) },
+            	TF  = { gamlss.dist::qTF( cent, prediction$mu, prediction$sigma, prediction$nu ) }
+            ),
     		warning = function( msg ) {
     			message( paste0( "warning! something went wrong with ", fam ) )
     			message( msg )
@@ -128,7 +131,10 @@ probability <-
 			BCCG = { gamlss.dist::pBCCG( x, prediction$mu, prediction$sigma, prediction$nu ) },
 			BCCGo = { gamlss.dist::pBCCGo( x, prediction$mu, prediction$sigma, prediction$nu ) },
 			NO = { gamlss.dist::pNO( x, prediction$mu, prediction$sigma ) },
-			PO = { gamlss.dist::pPO( x, prediction$mu ) } )
+			PO = { gamlss.dist::pPO( x, prediction$mu ) },
+			LNO = { gamlss.dist::pLNO( x, prediction$mu, prediction$sigma, prediction$nu ) },
+			TF  = { gamlss.dist::pTF( x, prediction$mu, prediction$sigma, prediction$nu ) }
+		)
 	}
 
 #' density
@@ -166,7 +172,10 @@ density <-
 			BCCG = { gamlss.dist::dBCCG( x, prediction$mu, prediction$sigma, prediction$nu ) },
 			BCCGo = { gamlss.dist::dBCCGo( x, prediction$mu, prediction$sigma, prediction$nu ) },
 			NO = { gamlss.dist::dNO( x, prediction$mu, prediction$sigma ) },
-			PO = { gamlss.dist::dPO( x, prediction$mu ) } )
+			PO = { gamlss.dist::dPO( x, prediction$mu ) },
+			LNO = { gamlss.dist::dLNO( x, prediction$mu, prediction$sigma, prediction$nu ) },
+			TF  = { gamlss.dist::dTF( x, prediction$mu, prediction$sigma, prediction$nu ) }
+		)
 	}
 
 #' compute.model
