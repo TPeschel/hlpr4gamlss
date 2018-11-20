@@ -191,19 +191,7 @@ dDist <-
 #' @export
 #'
 rDist <-
-	function( n = 1, mu = 0, sigma = 1, nu = NULL, tau = NULL, family = NULL ) {
-
-		a<-
-			attr( prediction, "family" )[ 1 ]
-
-		fam <-
-			ifelse(
-				is.null( family ),
-				ifelse(
-					is.null( a ),
-					"NO",
-					a ),
-				family )
+	function( n = 1, mu = 0, sigma = 1, nu = NULL, tau = NULL, fam = "NO" ) {
 
 		switch(
 			as.character( fam ),
