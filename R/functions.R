@@ -191,7 +191,7 @@ dDist <-
 #' @export
 #'
 rDist <-
-	function( n = 1, mu = 1, sigma = 1, nu = NULL, tau = NULL, fam = "NO" ) {
+	function( n = 1, mu = 1, sigma = 1, nu = 1, tau = 1, fam = "NO" ) {
 
 		switch(
 			as.character( fam ),
