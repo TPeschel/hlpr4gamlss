@@ -6,7 +6,7 @@
 \usage{
 do.the.whole.thing(cent, y.col.name = col.name, x.col.name = "AGE",
   group.col.name = "SEX", data, x.pred = NULL, fam = c("BCPE", "BCT",
-  "BCCG", "BCPEo", "BCTo", "BCCGo"), n.cyc = 30)
+  "BCCG", "BCPEo", "BCTo", "BCCGo"), n.cyc = 30, refit = F)
 }
 \arguments{
 \item{cent}{the centiles that should be calculated}

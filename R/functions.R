@@ -43,7 +43,7 @@ which.best.match <-
 
 #' inverse.probability
 #'
-#' @name inverse.probability
+#' @name qDist
 #' @description wrapper: is the quantile function for the respective family or prediction
 #' @param cent value. centiles that should be calculated. 0.0 < cent & cent < 1.0
 #' @param prediction a data.frame conraining distribution parameters (mu,sigma,nu,tau) for a certain gamlss model.
@@ -56,8 +56,8 @@ which.best.match <-
 #' plot(d<-data.frame(x=1:1000,y=rBCTo(1000,1000,100,10,1)+rnorm( 1000,0,.1*1:1000)+1:1000))
 #' (m<-lms(y,x,data=d)) # somtimes BCPEo or BCTo
 #' (f<-predictAll(m,data.frame(x=10*c(1:100))))
-#' (p<-as.data.frame(sapply(cnt<-c(.025,.5,.975),inverse.probability,f)))
-inverse.probability <-
+#' (p<-as.data.frame(sapply(cnt<-c(.025,.5,.975),qDist,f)))
+qDist <-
     function( cent, prediction, family = NULL ) {
 
     	a <-
@@ -75,16 +75,16 @@ inverse.probability <-
     	tryCatch(
     		switch(
             	as.character( fam ),
-	            BCT = { gamlss.dist::qBCT( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-	            BCTo = { gamlss.dist::qBCTo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-	            BCPE = { gamlss.dist::qBCPE( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCT   = { gamlss.dist::qBCT(   cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCTo  = { gamlss.dist::qBCTo(  cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+	            BCPE  = { gamlss.dist::qBCPE(  cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
 	            BCPEo = { gamlss.dist::qBCPEo( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-	            BCCG = { gamlss.dist::qBCCG( cent, prediction$mu, prediction$sigma, prediction$nu ) },
+	            BCCG  = { gamlss.dist::qBCCG(  cent, prediction$mu, prediction$sigma, prediction$nu ) },
 	            BCCGo = { gamlss.dist::qBCCGo( cent, prediction$mu, prediction$sigma, prediction$nu ) },
-	            NO = { gamlss.dist::qNO( cent, prediction$mu, prediction$sigma ) },
-	            PO = { gamlss.dist::qPO( cent, prediction$mu ) },
-            	LNO = { gamlss.dist::qLNO( cent, prediction$mu, prediction$sigma, prediction$nu ) },
-            	TF  = { gamlss.dist::qTF( cent, prediction$mu, prediction$sigma, prediction$nu ) }
+	            NO    = { gamlss.dist::qNO(    cent, prediction$mu, prediction$sigma ) },
+	            PO    = { gamlss.dist::qPO(    cent, prediction$mu ) },
+            	LNO   = { gamlss.dist::qLNO(   cent, prediction$mu, prediction$sigma, prediction$nu ) },
+            	TF    = { gamlss.dist::qTF(    cent, prediction$mu, prediction$sigma, prediction$nu ) }
             ),
     		warning = function( msg ) {
     			message( paste0( "warning! something went wrong with ", fam ) )
@@ -98,16 +98,16 @@ inverse.probability <-
 
 #' probability
 #'
-#' @name probability
+#' @name pDist
 #' @description not for direct use
 #' @param x independent values
 #' @param prediction a gamlss prediction
 #' @param family the family of prediction, for the case it's not an attribute
 #'
-#' @return z-scores for
+#' @return values relating to probabilities and prediction or family
 #' @export
 #'
-probability <-
+pDist <-
 	function( x, prediction, family = NULL ) {
 
 		a<-
@@ -124,31 +124,31 @@ probability <-
 
 		switch(
 			as.character( fam ),
-			BCT = { gamlss.dist::pBCT( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCTo = { gamlss.dist::pBCTo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCPE = { gamlss.dist::pBCPE( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCT   = { gamlss.dist::pBCT(   x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCTo  = { gamlss.dist::pBCTo(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCPE  = { gamlss.dist::pBCPE(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
 			BCPEo = { gamlss.dist::pBCPEo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCCG = { gamlss.dist::pBCCG( x, prediction$mu, prediction$sigma, prediction$nu ) },
+			BCCG  = { gamlss.dist::pBCCG(  x, prediction$mu, prediction$sigma, prediction$nu ) },
 			BCCGo = { gamlss.dist::pBCCGo( x, prediction$mu, prediction$sigma, prediction$nu ) },
-			NO = { gamlss.dist::pNO( x, prediction$mu, prediction$sigma ) },
-			PO = { gamlss.dist::pPO( x, prediction$mu ) },
-			LNO = { gamlss.dist::pLNO( x, prediction$mu, prediction$sigma, prediction$nu ) },
-			TF  = { gamlss.dist::pTF( x, prediction$mu, prediction$sigma, prediction$nu ) }
+			NO    = { gamlss.dist::pNO(    x, prediction$mu, prediction$sigma ) },
+			PO    = { gamlss.dist::pPO(    x, prediction$mu ) },
+			LNO   = { gamlss.dist::pLNO(   x, prediction$mu, prediction$sigma, prediction$nu ) },
+			TF    = { gamlss.dist::pTF(    x, prediction$mu, prediction$sigma, prediction$nu ) }
 		)
 	}
 
 #' density
 #'
-#' @name density
+#' @name dDist
 #' @description not for direct use
 #' @param x independent values
 #' @param prediction a gamlss prediction
 #' @param family the family of prediction, for the case it's not an attribute
 #'
-#' @return z-scores for
+#' @return values relating to probabilities and prediction or family
 #' @export
 #'
-density <-
+dDist <-
 	function( x, prediction, family = NULL ) {
 
 		a<-
@@ -165,16 +165,58 @@ density <-
 
 		switch(
 			as.character( fam ),
-			BCT = { gamlss.dist::dBCT( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCTo = { gamlss.dist::dBCTo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCPE = { gamlss.dist::dBCPE( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCT   = { gamlss.dist::dBCT(   x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCTo  = { gamlss.dist::dBCTo(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCPE  = { gamlss.dist::dBCPE(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
 			BCPEo = { gamlss.dist::dBCPEo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCCG = { gamlss.dist::dBCCG( x, prediction$mu, prediction$sigma, prediction$nu ) },
+			BCCG  = { gamlss.dist::dBCCG(  x, prediction$mu, prediction$sigma, prediction$nu ) },
 			BCCGo = { gamlss.dist::dBCCGo( x, prediction$mu, prediction$sigma, prediction$nu ) },
-			NO = { gamlss.dist::dNO( x, prediction$mu, prediction$sigma ) },
-			PO = { gamlss.dist::dPO( x, prediction$mu ) },
-			LNO = { gamlss.dist::dLNO( x, prediction$mu, prediction$sigma, prediction$nu ) },
-			TF  = { gamlss.dist::dTF( x, prediction$mu, prediction$sigma, prediction$nu ) }
+			NO    = { gamlss.dist::dNO(    x, prediction$mu, prediction$sigma ) },
+			PO    = { gamlss.dist::dPO(    x, prediction$mu ) },
+			LNO   = { gamlss.dist::dLNO(   x, prediction$mu, prediction$sigma, prediction$nu ) },
+			TF    = { gamlss.dist::dTF(    x, prediction$mu, prediction$sigma, prediction$nu ) }
+		)
+	}
+
+
+#' random distribution
+#'
+#' @name rDist
+#' @description not for direct use
+#' @param x independent values
+#' @param prediction a gamlss prediction
+#' @param family the family of prediction, for the case it's not an attribute
+#'
+#' @return values relating to probabilities and prediction or family
+#' @export
+#'
+rDist <-
+	function( x, prediction, family = NULL ) {
+
+		a<-
+			attr( prediction, "family" )[ 1 ]
+
+		fam <-
+			ifelse(
+				is.null( family ),
+				ifelse(
+					is.null( a ),
+					"NO",
+					a ),
+				family )
+
+		switch(
+			as.character( fam ),
+			BCT   = { gamlss.dist::rBCT(   x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCTo  = { gamlss.dist::rBCTo(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCPE  = { gamlss.dist::rBCPE(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCPEo = { gamlss.dist::rBCPEo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCCG  = { gamlss.dist::rBCCG(  x, prediction$mu, prediction$sigma, prediction$nu ) },
+			BCCGo = { gamlss.dist::rBCCGo( x, prediction$mu, prediction$sigma, prediction$nu ) },
+			NO    = { gamlss.dist::rNO(    x, prediction$mu, prediction$sigma ) },
+			PO    = { gamlss.dist::rPO(    x, prediction$mu ) },
+			LNO   = { gamlss.dist::rLNO(   x, prediction$mu, prediction$sigma, prediction$nu ) },
+			TF    = { gamlss.dist::rTF(    x, prediction$mu, prediction$sigma, prediction$nu ) }
 		)
 	}
 
@@ -192,43 +234,17 @@ density <-
 #' @export
 #'
 compute.model <-
-    function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo" ), n.cyc = 30, refit = F ) {
+    function( y, x, families = c( "BCCG", "BCPE", "BCT", "BCCGo", "BCPEo", "BCTo", "LNO" ), n.cyc = 30, refit = F ) {
 
     	d <-
     		data.frame( x = x, y = y )
 
-    	d.lms <-
-    		gamlss::lms(
-				y = y,
-    			x = x,
-    			data = d,
-				families = families,
-				n.cyc = n.cyc )
-
-    	# if( ! d.lms$converged && refit ) {
-    	#
-    	# 	d.lms. <-
-    	# 		refit( d.lms )
-    	#
-    	# 	a <-
-    	# 		setdiff( names( d.lms ), names( d.lms. ) )
-    	#
-    	# 	for( i in a ) {
-    	# 		d.lms.[[ a[ i ] ]] <-
-    	# 			d.lms[[ a[ i ] ]] }
-    	#
-    	# 	d.lms <-
-    	# 		d.lms.
-    	#
-    	# 	attr( d.lms, "refitted" ) <-
-    	# 		T
-    	# } else {
-    	#
-    	# 	attr( d.lms, "refitted" ) <-
-    	# 		F
-    	# }
-
-    	d.lms
+    	gamlss::lms(
+    		y = y,
+    		x = x,
+    		data = d,
+    		families = families,
+    		n.cyc = n.cyc )
     }
 
 #' compute.prediction
@@ -267,12 +283,12 @@ compute.percentiles <-
 
 		l <-
 			tryCatch(
-			as.data.frame(
-				lapply(
-					cent,
-					inverse.probability,
-					prediction,
-					family ) ),
+				as.data.frame(
+					lapply(
+						cent,
+						qDist,
+						prediction,
+						family ) ),
 				error = function( msg ) {
 					message( msg )
 					return( NULL )
