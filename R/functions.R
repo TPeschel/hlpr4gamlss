@@ -191,7 +191,7 @@ dDist <-
 #' @export
 #'
 rDist <-
-	function( n, prediction, family = NULL ) {
+	function( n = 1, mu = 0, sigma = 1, nu = NULL, tau = NULL, family = NULL ) {
 
 		a<-
 			attr( prediction, "family" )[ 1 ]
@@ -207,16 +207,16 @@ rDist <-
 
 		switch(
 			as.character( fam ),
-			BCT   = { gamlss.dist::rBCT(   n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCTo  = { gamlss.dist::rBCTo(  n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCPE  = { gamlss.dist::rBCPE(  n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCPEo = { gamlss.dist::rBCPEo( n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCCG  = { gamlss.dist::rBCCG(  n, prediction$mu, prediction$sigma, prediction$nu ) },
-			BCCGo = { gamlss.dist::rBCCGo( n, prediction$mu, prediction$sigma, prediction$nu ) },
-			NO    = { gamlss.dist::rNO(    n, prediction$mu, prediction$sigma ) },
-			PO    = { gamlss.dist::rPO(    n, prediction$mu ) },
-			LNO   = { gamlss.dist::rLNO(   n, prediction$mu, prediction$sigma, prediction$nu ) },
-			TF    = { gamlss.dist::rTF(    n, prediction$mu, prediction$sigma, prediction$nu ) }
+			BCT   = { gamlss.dist::rBCT(   n, mu, sigma, nu, tau ) },
+			BCTo  = { gamlss.dist::rBCTo(  n, mu, sigma, nu, tau ) },
+			BCPE  = { gamlss.dist::rBCPE(  n, mu, sigma, nu, tau ) },
+			BCPEo = { gamlss.dist::rBCPEo( n, mu, sigma, nu, tau ) },
+			BCCG  = { gamlss.dist::rBCCG(  n, mu, sigma, nu ) },
+			BCCGo = { gamlss.dist::rBCCGo( n, mu, sigma, nu ) },
+			NO    = { gamlss.dist::rNO(    n, mu, sigma ) },
+			PO    = { gamlss.dist::rPO(    n, mu ) },
+			LNO   = { gamlss.dist::rLNO(   n, mu, sigma, nu ) },
+			TF    = { gamlss.dist::rTF(    n, mu, sigma, nu ) }
 		)
 	}
 
