@@ -191,7 +191,7 @@ dDist <-
 #' @export
 #'
 rDist <-
-	function( x, prediction, family = NULL ) {
+	function( n, prediction, family = NULL ) {
 
 		a<-
 			attr( prediction, "family" )[ 1 ]
@@ -207,16 +207,16 @@ rDist <-
 
 		switch(
 			as.character( fam ),
-			BCT   = { gamlss.dist::rBCT(   x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCTo  = { gamlss.dist::rBCTo(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCPE  = { gamlss.dist::rBCPE(  x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCPEo = { gamlss.dist::rBCPEo( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
-			BCCG  = { gamlss.dist::rBCCG(  x, prediction$mu, prediction$sigma, prediction$nu ) },
-			BCCGo = { gamlss.dist::rBCCGo( x, prediction$mu, prediction$sigma, prediction$nu ) },
-			NO    = { gamlss.dist::rNO(    x, prediction$mu, prediction$sigma ) },
-			PO    = { gamlss.dist::rPO(    x, prediction$mu ) },
-			LNO   = { gamlss.dist::rLNO(   x, prediction$mu, prediction$sigma, prediction$nu ) },
-			TF    = { gamlss.dist::rTF(    x, prediction$mu, prediction$sigma, prediction$nu ) }
+			BCT   = { gamlss.dist::rBCT(   n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCTo  = { gamlss.dist::rBCTo(  n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCPE  = { gamlss.dist::rBCPE(  n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCPEo = { gamlss.dist::rBCPEo( n, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
+			BCCG  = { gamlss.dist::rBCCG(  n, prediction$mu, prediction$sigma, prediction$nu ) },
+			BCCGo = { gamlss.dist::rBCCGo( n, prediction$mu, prediction$sigma, prediction$nu ) },
+			NO    = { gamlss.dist::rNO(    n, prediction$mu, prediction$sigma ) },
+			PO    = { gamlss.dist::rPO(    n, prediction$mu ) },
+			LNO   = { gamlss.dist::rLNO(   n, prediction$mu, prediction$sigma, prediction$nu ) },
+			TF    = { gamlss.dist::rTF(    n, prediction$mu, prediction$sigma, prediction$nu ) }
 		)
 	}
 
