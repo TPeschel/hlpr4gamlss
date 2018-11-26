@@ -1,6 +1,3 @@
-library( gamlss )
-library( gamlss.dist )
-
 #' best.match
 #'
 #' @name best.match
@@ -148,6 +145,7 @@ dist.Call <-
 #' gamlss.families( )
 gamlss.families <-
 	function( ) {
+		library( gamlss.dist )
 		intersect(
 			intersect(
 				gsub( "^d", "", ls( "package:gamlss.dist" )[ grepl( "^d[A-Z]+", ls( "package:gamlss.dist" ) ) ] ),
