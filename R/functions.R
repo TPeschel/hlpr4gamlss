@@ -1,4 +1,5 @@
 library( gamlss )
+library( gamlss.dist )
 
 #' best.match
 #'
