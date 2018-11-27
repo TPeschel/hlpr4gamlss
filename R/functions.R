@@ -55,7 +55,7 @@ which.best.match <-
 #' n.C <- new.Call( "print", "Hello World!" )
 #' do.Call( n.C )
 new.Call <-
-	function( func = "Sys.time", ..., canonical = F ) {
+	function( func = "Sys.time", ..., canonical = F, arg.len.cut.off = 25 ) {
 		args.list <- list( ... )
 		if( canonical ) {
 			frmls           <- formals( func )
@@ -71,7 +71,7 @@ new.Call <-
 			names( args.list )[ empty.names ]        <- common.names[ 1 : length( empty.names ) ]
 			frmls[ names( args.list ) ]              <- args.list
 			frmls.chars                              <- as.character( frmls )
-			frmls.chars[ nchar( frmls.chars ) > 15 ] <- paste0( substr( frmls.chars[ nchar( frmls.chars ) > 15 ], 1, 10 ), " ... " )
+			frmls.chars[ nchar( frmls.chars ) > arg.len.cut.off ] <- paste0( substr( frmls.chars[ nchar( frmls.chars ) > arg.len.cut.off ], 1, arg.len.cut.off - 5 ), " ··· " )
 			return(
 				list(
 					FUNC = func,
