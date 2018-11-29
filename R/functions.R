@@ -304,6 +304,7 @@ qDist <-
 	            NO    = { gamlss.dist::qNO(    cent, prediction$mu, prediction$sigma ) },
 	            PO    = { gamlss.dist::qPO(    cent, prediction$mu ) },
             	LNO   = { gamlss.dist::qLNO(   cent, prediction$mu, prediction$sigma, prediction$nu ) },
+    			SHASH = { gamlss.dist::qSHASH( cent, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
             	TF    = { gamlss.dist::qTF(    cent, prediction$mu, prediction$sigma, prediction$nu ) }
             ),
     		warning = function( msg ) {
@@ -353,6 +354,7 @@ pDist <-
 			NO    = { gamlss.dist::pNO(    x, prediction$mu, prediction$sigma ) },
 			PO    = { gamlss.dist::pPO(    x, prediction$mu ) },
 			LNO   = { gamlss.dist::pLNO(   x, prediction$mu, prediction$sigma, prediction$nu ) },
+   			SHASH = { gamlss.dist::pSHASH( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
 			TF    = { gamlss.dist::pTF(    x, prediction$mu, prediction$sigma, prediction$nu ) }
 		)
 	}
@@ -394,6 +396,7 @@ dDist <-
 			NO    = { gamlss.dist::dNO(    x, prediction$mu, prediction$sigma ) },
 			PO    = { gamlss.dist::dPO(    x, prediction$mu ) },
 			LNO   = { gamlss.dist::dLNO(   x, prediction$mu, prediction$sigma, prediction$nu ) },
+			SHASH = { gamlss.dist::dSHASH( x, prediction$mu, prediction$sigma, prediction$nu, prediction$tau ) },
 			TF    = { gamlss.dist::dTF(    x, prediction$mu, prediction$sigma, prediction$nu ) }
 		)
 	}
@@ -424,6 +427,7 @@ rDist <-
 			NO    = { gamlss.dist::rNO(    n, mu, sigma ) },
 			PO    = { gamlss.dist::rPO(    n, mu ) },
 			LNO   = { gamlss.dist::rLNO(   n, mu, sigma, nu ) },
+    		SHASH = { gamlss.dist::rSHASH( n, mu, sigma, nu, tau ) },
 			TF    = { gamlss.dist::rTF(    n, mu, sigma, nu ) }
 		)
 	}
